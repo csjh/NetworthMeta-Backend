@@ -10,12 +10,14 @@ import (
 )
 
 func Connect() *mongo.Client {
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic("Couldn't read .env file")
+	if os.Getenv("MONGODB_URL") == "" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			panic("Couldn't read .env file")
+		}
 	}
 
-	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URL"))
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_URL"))
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		panic("⛒ Connection Failed to Database")
