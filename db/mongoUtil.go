@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,7 +26,7 @@ func Connect() *mongo.Client {
 	if err != nil {
 		panic("⛒ Connection Failed to Database")
 	}
-	fmt.Println("⛁ Connected to Database")
+
 	return client
 }
 
@@ -41,6 +40,4 @@ func Disconnect(client *mongo.Client) {
 		panic(err)
 	}
 	client = nil
-
-	fmt.Println("⛁ Disconnected from Database")
 }

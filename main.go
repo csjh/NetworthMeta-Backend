@@ -1,7 +1,7 @@
 package main
 
 import (
-	"compress/zlib"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"github.com/csjh/NetworthMeta-Backend/generators"
@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"math"
 	"net/http"
+	"os"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +37,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader, err := zlib.NewReader(file)
+	reader, err := gzip.NewReader(file)
 	result, err := ioutil.ReadAll(reader)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -114,7 +115,12 @@ func main() {
 	http.HandleFunc("/networth", handler)
 	http.HandleFunc("/auctions", scripts.ShowAuctions)
 	http.HandleFunc("/bazaar", scripts.ShowBazaar)
-	err = http.ListenAndServe(":8082", nil)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8082"
+	}
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 	if err != nil {
 		panic(err)
 	}
